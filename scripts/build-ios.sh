@@ -12,6 +12,16 @@ xcodebuild -project WeekNote.xcodeproj -scheme WeekNote -configuration Release \
   -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/DerivedData \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 mkdir -p build/package/Payload build/output
+app="build/DerivedData/Build/Products/Release-iphoneos/WeekNote.app"
+test -f "$app/www/index.html"
+test -f "$app/www/native.js"
+/usr/bin/plutil -extract UIApplicationSceneManifest.UIApplicationSupportsMultipleScenes raw -o - "$app/Info.plist"
+/usr/bin/plutil -convert xml1 -o build/output/AppInfo.plist "$app/Info.plist"
+{
+  xcodebuild -version
+  /usr/bin/file "$app/WeekNote"
+  /usr/bin/xcrun lipo -archs "$app/WeekNote"
+} > build/output/BuildInfo.txt
 cp -R build/DerivedData/Build/Products/Release-iphoneos/WeekNote.app build/package/Payload/
 cd build/package
 /usr/bin/zip -qry ../output/WeekNote-iPhone-unsigned.ipa Payload
