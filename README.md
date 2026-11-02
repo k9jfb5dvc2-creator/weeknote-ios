@@ -1,51 +1,37 @@
 # 周纸条 · iPhone 原生版
 
-这是包含原生 iOS 本地通知与手机界面的完整 Xcode 工程。安装到手机后显示为“周纸条”。最低系统为 iOS 16。
+适用 iOS 16 及以上，安装后显示为“周纸条”。保留黄色便签、七天日期条和自动编号随手记，支持任务编辑、完成撤销、搜索筛选、系统本地提醒与 JSON 备份。
 
-当前交付是工程与构建流程，尚未在此 Windows 电脑上编译成 IPA 或完成真机安装。`WeekNote-iPhone-unsigned.ipa` 只有在 Mac 或云端构建成功后才会生成；未签名包还需要以你自己的 Apple 账号签名。
+**已在云端 Mac / Xcode 16.4 成功编译 iPhone arm64 安装包，并下载 `WeekNote-iPhone-unsigned.ipa`。**[成功的构建记录](https://github.com/k9jfb5dvc2-creator/weeknote-ios/actions/runs/41386344973)
 
-## 功能
+IPA 尚未签名，不能在手机上点开即装，需要用自己的 Apple 账号签名。**已通过 iOS 18.5 模拟器启动检查并核对实际界面截图；尚未完成你的 iPhone 真机安装或系统通知实测。**[公开源码](https://github.com/k9jfb5dvc2-creator/weeknote-ios)不包含你的个人笔记。
 
-- 黄色便签风格，七天日期条，逐日查看任务和随手记。
-- 直接书写时自动编号 1、2、3…；手机键盘上方有下一项、同项换行和完成按钮。
-- 创建、编辑、完成、删除任务，重要标记、日期与可选时间提醒。
-- iOS 系统本地提醒，以及通知中的完成、延后十分钟操作。
-- 搜索筛选、周进度、JSON 导入合并与导出备份。
-- 本地离线保存。Windows 版导出的 JSON 可在手机设置页导入。两端可通过备份文件迁移内容。
+本次 IPA 的 SHA256：
 
-首次设置提醒时需要在 App 内允许通知。已经交给系统排程的提醒不依赖网页保持打开；通知是否显示横幅或发声仍受手机通知权限、专注模式等系统设置影响。App 会安排最近的最多 60 条未来提醒，超出时在提醒状态里显示，后续打开 App 时继续安排。
+```text
+4AF63268CFA7BBC1A9603826DF8CDC93A37746BC83820C6857E0B5AC59265952
+```
 
-## 没有 Mac：云端编译，再用 Windows 自签安装
+## 用 Windows 安装
 
-1. 在自己的 GitHub 账号中新建一个仓库，例如 `weeknote-ios`。公开仓库会公开应用源码，标准公共构建可免费使用；个人便签备份不应放进仓库。
-2. 将本文件夹内容完整放到仓库根目录，包括 `.github/workflows/build-ios.yml`、`WeekNote`、`WeekNote.xcodeproj`、`scripts` 和 `tests`。请勿上传你导出的个人备份、Apple 密码或签名证书。
-3. 打开仓库的 **Actions → Build iPhone app → Run workflow**。只有手动启动才会编译，上传工程不会自动消耗构建额度。
-4. 构建成功后，在该次运行底部的 Artifacts 下载 `WeekNote-iPhone-unsigned`。解压后得到未签名 `.ipa` 与 SHA256 校验文件。
-5. 按 [AltStore Classic 的 Windows 官方安装说明](https://faq.altstore.io/altstore-classic/how-to-install-altstore-windows)安装 AltServer，并通过 USB 连接自己的 iPhone。Apple 账号和密码只在你自己电脑上的安装工具中输入，不发送到聊天或写进云端构建文件。
-6. 可在 Windows 中按住 Shift 点击 AltServer 托盘图标，选择 **Sideload .ipa…**，选择构建得到的 IPA；也可通过 AltStore Classic 的 My Apps 导入。由你自己完成账号登录、手机信任和开发者模式等系统步骤。
-7. 打开手机上的“周纸条”，设置第一条提醒，再允许通知。
+1. 按 [AltStore Windows 官方教程](https://faq.altstore.io/altstore-classic/how-to-install-altstore-windows)安装 AltServer，以及教程指定的 Apple 官网版 iTunes、iCloud。启动 AltServer，用 USB 连接已解锁的 iPhone，由你完成“信任此电脑”和 iTunes 的 Wi-Fi 同步设置。
+2. 点击 Windows 右下角 AltServer 图标，选择 **Install AltStore → 你的 iPhone**。Apple 账号和密码只由你在本机安装工具输入，不发送到聊天。GitHub 登录用于代码与编译，Apple 登录用于手机安装签名，两者不同。
+3. 手机按提示信任开发者；iOS 16+ 的“隐私与安全性 → 开发者模式”和重启确认由你自行完成。将 IPA 保存到手机“文件”，在 AltStore → **My Apps → ＋** 中选择它。
+4. 也可在 Windows 按住 **Shift** 点击 AltServer 图标，选择 **Sideload .ipa…** 直接安装；该方式需要自行定期重新签名安装。[官方说明](https://faq.altstore.io/release-notes/altserver)
+5. 打开周纸条，到 **设置 → 开启通知**，在系统弹窗中点“允许”。新建一个几分钟后的提醒，分别在前台和锁屏时确认效果。
 
-免费 Apple 账号的个人签名有效期为 7 天，需要在到期前刷新；AltStore Classic 可配合运行中的 AltServer 刷新。请勿通过删除 App 续签，以免删除本机数据。详情见 [AltStore 使用说明](https://faq.altstore.io/altstore-classic/your-altstore)与 [Apple 个人开发账号说明](https://developer.apple.com/help/account/basics/about-your-developer-account)。
+免费账号签名 7 天到期。通过 AltStore 安装时，保持 AltServer 运行、手机通过 USB 或同一 Wi-Fi 连接，到期前在 **My Apps → Refresh All** 刷新。Shift 直接安装的包需按原方式重新签名安装。**续签不要删除 App，以免丢失本机便签。**[刷新说明](https://faq.altstore.io/altstore-classic/your-altstore)
 
-云端构建使用 GitHub 的 macOS runner，会消耗账号的 Actions 额度；私有仓库额度不足时请先检查账号计费设置，不要直接开启付费构建。当前工作流不读取任何证书或 Apple 密码，也不会自动发布到 App Store。
+## 使用与迁移
 
-## 有 Mac 时
+- 随手记回车自动出现 1、2、3；键盘上方可点“下一项”“同项换行”“完成”。编号只显示，正文独立保存。
+- 任务可选日期、时间和重要标记。通知提供“完成”“10 分钟后”操作；通知显示及声音受 iPhone 通知和专注模式设置影响。
+- App 安排最近最多 60 条未来提醒，超出数量会显示；后续打开 App 时继续安排。
+- Windows 版 **更多 → 导出备份** 得到 JSON，传到手机“文件”，再用手机版 **设置 → 导入并合并**。重复导入不会重复任务，导入后可撤销。
+- 数据离线保存在本机，没有应用内账号，也不自动跨设备同步；可在设置页导出备份。
 
-1. 用 Xcode 打开 `WeekNote.xcodeproj`，选择 `WeekNote`。
-2. 在 Signing & Capabilities 里选择自己的 Team，保持 Automatically manage signing。若 Bundle Identifier 已被占用，改成自己唯一的标识。
-3. 连接自己的 iPhone，由你完成手机提示的信任和开发者模式步骤。
-4. 选择手机作为运行目标，按 Xcode 的 Run。
+## 后续自行编译
 
-只编译未签名 IPA 可执行 `bash scripts/build-ios.sh`。此脚本需要 macOS、Xcode 和 Node.js。
+打开源码仓库 **Actions → Build iPhone app → Run workflow**；在构建产物中下载 `WeekNote-iPhone-unsigned`。有 Mac 时，也可用 Xcode 打开 `WeekNote.xcodeproj`，选择自己的签名 Team 后运行到 iPhone，或执行 `bash scripts/build-ios.sh` 生成未签名包。
 
-## 检查与工程结构
-
-`node --test tests/*.test.cjs` 检查可复用的日期、编号和手机桥接逻辑。它不等同于 Swift 编译或 iPhone 真机验证。Mac 和真机的检查项目见 `tests/README.md`。
-
-- `WeekNoteApp.swift`：原生 App 入口、WebView 与页面导航边界。
-- `NativeStore.swift`：本机 JSON 保存、校验和备份。
-- `ReminderService.swift`：系统提醒排程、通知操作与冷启动事件。
-- `WebHost.swift`：本地页面和 iOS 之间的接口、文件选择与导出。
-- `www`：随 App 一起打包的离线手机界面。
-
-不需要运行网站服务器，不需要注册应用内账号。个人数据不会随此工程包上传；导出备份文件时由你选择存放位置。
+`node --test tests/*.test.cjs` 检查日期、编号、手机桥接与工程资源。编译、模拟器启动及真机提醒是不同的验证项目；详细清单见工程中的 `tests/README.md`。
