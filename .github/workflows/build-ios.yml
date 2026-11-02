@@ -17,6 +17,8 @@ jobs:
           node-version: '22'
       - name: Build unsigned iPhone package
         run: bash scripts/build-ios.sh
+      - name: Launch app in iPhone simulator
+        run: bash scripts/smoke-ios.sh
       - name: Upload iPhone package
         uses: actions/upload-artifact@v4
         with:
