@@ -1,0 +1,11 @@
+.DS_Store
+build/
+*.ipa
+*.xcarchive
+xcuserdata/
+*.xcuserstate
+node_modules/
+*.p12
+*.mobileprovision
+*.key
+*.json.bak

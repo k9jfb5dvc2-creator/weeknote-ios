@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff8d9">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>周纸条</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell" id="appShell">
+  <header class="app-header"><div><h1><i aria-hidden="true"></i>周纸条</h1><time id="todayDate"></time></div><button id="headerToday" class="quiet-button" aria-label="回到今天">今天</button></header>
+  <div id="previewBanner" class="preview-banner" hidden>浏览器预览 · 系统提醒不可用</div>
+  <main id="mainContent" class="main-content">
+    <section id="weekScreen" class="screen week-screen" aria-label="本周计划">
+      <div class="week-switcher"><button id="prevWeek" class="icon-button" aria-label="上一周">‹</button><button id="thisWeek" class="week-label" aria-label="本周日期，点击回到今天"></button><button id="nextWeek" class="icon-button" aria-label="下一周">›</button></div>
+      <nav id="dayTabs" class="day-tabs" aria-label="选择日期"></nav>
+      <div class="search-row"><label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="搜索任务与便签" aria-label="搜索全部日期的任务与便签" autocomplete="off" enterkeyhint="search"></label><select id="filterSelect" aria-label="筛选任务"><option value="all">全部</option><option value="open">未完成</option><option value="done">已完成</option><option value="high">重要</option></select></div>
+      <div id="dayContent" class="day-content"><div class="day-title"><h2 id="selectedDate"></h2><span id="weekProgress"></span></div><div id="taskList" class="task-list"></div><section class="note-section"><label for="dayNote">随手记<span>回车自动编号</span></label><textarea id="dayNote" class="day-note" placeholder="点击写下第一件事…" aria-label="当天自动编号便签" rows="7" spellcheck="false" enterkeyhint="enter"></textarea></section></div>
+      <section id="searchResults" class="search-results" aria-label="搜索结果" hidden></section>
+    </section>
+    <section id="reminderScreen" class="screen" aria-label="时间提醒" hidden><div class="screen-heading"><span class="eyebrow">按自己的节奏</span><h2>时间提醒</h2><p>任务里选一个时间，重要的事到时再提醒。</p></div><div id="reminderPermission" class="inline-notice" hidden></div><div id="reminderList" class="reminder-list"></div></section>
+    <section id="settingsScreen" class="screen" aria-label="设置与备份" hidden><div class="screen-heading"><span class="eyebrow">这张纸条，只属于你</span><h2>设置与备份</h2></div><section class="settings-section"><h3>系统提醒</h3><div class="setting-card"><strong id="notificationStatus">正在读取通知状态…</strong><p id="notificationDetail"></p><p id="scheduleWarning" class="warning" hidden></p><button id="permissionButton" class="full-button secondary-button">开启通知</button><button id="notificationSettingsButton" class="full-button secondary-button" hidden>前往 iPhone 通知设置</button></div></section><section class="settings-section"><h3>我的数据</h3><p class="section-caption">任务和便签保存在这台 iPhone。导出的 JSON 备份也可导入 Windows 版周纸条。</p><button id="exportButton" class="setting-action"><span>导出备份<small>存到“文件”或通过系统分享保存</small></span><span aria-hidden="true">↗</span></button><button id="importButton" class="setting-action"><span>导入并合并<small>保留已有内容，导入后可撤销</small></span><span aria-hidden="true">＋</span></button></section><section class="settings-section about-section"><h3>周纸条 · iPhone</h3><p>一周七天，一件一件来。<br>随手记自动编号；系统提醒需要通知权限。<br>没有账户，也不会自动同步到其他设备。</p></section></section>
+  </main>
+  <div id="saveState" class="save-state" role="status">正在读取纸条…</div>
+  <div id="noteToolbar" class="note-toolbar" aria-label="便签输入工具" hidden><button id="nextNoteItem" type="button">＋ 下一项</button><button id="noteLineBreak" type="button">同项换行</button><button id="finishNote" type="button">完成</button></div>
+  <footer class="bottom-bar"><nav class="bottom-nav" aria-label="主要页面"><button id="weekTab" class="nav-button active" aria-current="page"><span aria-hidden="true">▦</span>本周</button><button id="reminderTab" class="nav-button"><span aria-hidden="true">◷</span>提醒</button><button id="settingsTab" class="nav-button"><span aria-hidden="true">☷</span>设置</button></nav><button id="newTask" class="primary-button new-task" disabled><span aria-hidden="true">＋</span> 新建任务</button></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"><span id="toastMessage"></span><button id="undoButton" hidden>撤销</button><button id="dismissToast" aria-label="关闭提示">×</button></div>
+</div>
+<dialog id="taskDialog" class="task-dialog" aria-labelledby="dialogTitle"><form id="taskForm"><header class="dialog-header"><h2 id="dialogTitle">新建任务</h2><button id="cancelDialogX" class="icon-button" type="button" aria-label="取消">×</button></header><div class="dialog-body"><label for="editText">要做什么</label><textarea id="editText" maxlength="2000" placeholder="例如：给客户发最终方案" rows="3" required enterkeyhint="enter"></textarea><label for="editDate">日期</label><input id="editDate" type="date" required><label for="editTime">提醒时间 <span class="optional">选填</span></label><div class="time-row"><input id="editTime" type="time"><button id="clearTime" class="quiet-button" type="button">不提醒</button></div><label class="priority-field"><input id="editPriority" type="checkbox"><span>标为重要</span><i aria-hidden="true"></i></label><p id="reminderTip" class="form-hint"></p><p id="formError" class="form-error" role="alert" hidden></p></div><footer class="dialog-footer"><button id="cancelDialog" class="secondary-button" type="button">取消</button><button id="saveTask" class="primary-button" type="submit">保存任务</button></footer></form></dialog>
+<template id="taskTemplate"><article class="task-card"><button class="check" aria-label="标记完成" aria-pressed="false"><span></span></button><div class="task-copy"><button class="task-text"></button><div class="task-meta"><span class="priority-tag" hidden>重要</span><button class="task-time"></button></div></div><button class="delete-task" aria-label="删除任务">×</button></article></template>
+<script src="calendar.js"></script><script src="numbered-notes.js"></script><script src="native.js"></script><script src="app.js"></script>
+</body>
+</html>
