@@ -18,8 +18,10 @@ jobs:
       - name: Build unsigned iPhone package
         run: bash scripts/build-ios.sh
       - name: Launch app in iPhone simulator
+        timeout-minutes: 10
         run: bash scripts/smoke-ios.sh
       - name: Upload iPhone package
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: WeekNote-iPhone-unsigned
